@@ -1,40 +1,44 @@
 import { test, expect } from '@playwright/test';
+import { LoginPage } from '../app/pages/login.page';
+// Наличия кнопки на странице
+test('Check web elements', async ({ page }) => {
 
-// Тест наличия кнопки на странице
-test('Button visibility test', async ({ page }) => {
+  const loginPage = new LoginPage(page)  
+
+    await loginPage.goto();
+    await loginPage.checkWebElements();
+});
+
+// При нажатии на кнопку Continue with Email с пустым полем появляется ошибка
+test('An error appears when clicking the Continue with Email button with an empty field.', async ({ page }) => {
+
+  const loginPage = new LoginPage(page)
+    
+    await loginPage.goto();
+    await loginPage.loginButtonClick();
+    await loginPage.checkPopupErrorMessage();
+});
+
+// Отображается попап об успехе, после нажатии на кнопку Continue with Email с правильно заполненным полем 
+test('A success popup is displayed after clicking the Continue with Email button with a correctly filled field.', async ({ page }) => {
+
+  const loginPage = new LoginPage(page)
+
+    await loginPage.goto();
+    await loginPage.enterEmail(`test@mail.com`);
+    await loginPage.loginButtonClick();
+    await loginPage.checkSuccessMessage(`test@mail.com`); 
+});
+
+// Отображается текст об ошибке, после нажатии на кнопку Continue with Email с введённым Email без собаки 
+test.only('An error message is displayed after clicking the Continue with Email button with an email entered without the @ symbol..', async ({ page }) => {
+
+  const loginPage = new LoginPage(page)
+
+  await loginPage.goto();
+  await loginPage.enterEmail('aAbB11');
+  await loginPage.loginButtonClick();
+  await loginPage.checkErrorMessage();    
   
-    const contineWithGooglButton = page.locator ('//button/span[contains(.,"Continue with Google")]');
-    const contineWithLoginButton = page.locator ('//button/span[contains(.,"Continue with Email")]');
-    const inputEmail = page.locator ('//input[@placeholder="name@mail.com"]');
-    const errorMessage = page.locator ('//div[@data-testid="toast-content"]');
-    const errorMessage2 = page.locator ('//div[@id="input-1-messages"]');
-
-    await page.goto('https://yard-noty.web.app/');
-    await expect(contineWithGooglButton).toBeVisible();
-    await expect(contineWithLoginButton).toBeVisible();
-    await expect(inputEmail).toBeVisible();
-    await (contineWithLoginButton).click();
-
-    // Ждем 0.5 секунды перед кликом
-    await page.waitForTimeout(500);
-    await expect(errorMessage).toBeVisible();
-
-    // Вводим текст в поле рабочий email
-    await inputEmail.fill('test@example.com');
-    await (contineWithLoginButton).click();
-    await page.waitForTimeout(5000);
-    await expect(errorMessage).toBeVisible();
-
-    // Вводим текст в поле кривой email
-    await inputEmail.fill('aAbB11');
-    await (contineWithLoginButton).click();
-    await expect(errorMessage2).toBeVisible();
-
-    
-
-    
-    
-  
-   
-    
-  });
+     
+ });
