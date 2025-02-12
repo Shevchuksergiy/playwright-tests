@@ -31,7 +31,7 @@ test('A success popup is displayed after clicking the Continue with Email button
 });
 
 // Отображается текст об ошибке, после нажатии на кнопку Continue with Email с введённым Email без собаки 
-test.only('An error message is displayed after clicking the Continue with Email button with an email entered without the @ symbol..', async ({ page }) => {
+test('An error message is displayed after clicking the Continue with Email button with an email entered without the @ symbol..', async ({ page }) => {
 
   const loginPage = new LoginPage(page)
 
