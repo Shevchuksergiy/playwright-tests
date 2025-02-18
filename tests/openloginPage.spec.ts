@@ -1,5 +1,7 @@
 import { test, expect, request } from '@playwright/test';
 import { LoginPage } from '../app/pages/login.page';
+import { User } from '../app/helpers/user';
+
 // Наличия кнопки на странице
 test('Check web elements', async ({ page }) => {
 
@@ -47,8 +49,9 @@ test('An error message is displayed after clicking the Continue with Email butto
 test.only('Login with Email', async ({ page }) => {
 
   const loginPage = new LoginPage(page)
-
-  await loginPage.loginUsingEmail('c203d557831-dcd27d+any.alias@inbox.of-it.org');
+  const user = new User()
+  await loginPage.loginUsingEmail(user);
+  console.log (user.email, user.name)
    
   
      
