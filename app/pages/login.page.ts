@@ -1,8 +1,11 @@
 import { PageHolder } from "./pageHolder";
 import {  expect, test } from '@playwright/test';
+import { EmailCopHelper } from "../helpers/maillHelper";
+import { User } from '../helpers/user';
 
 export class LoginPage extends PageHolder{
 
+    private emailCopHelper = new EmailCopHelper(this.page.request)
     private continueWithGooglButton = this.page.locator ('//button/span[contains(.,"Continue with Google")]');
     private continueWithLoginButton = this.page.locator ('//button/span[contains(.,"Continue with Email")]');
     private inputEmail = this.page.locator ('//input[@placeholder="name@mail.com"]');
@@ -44,5 +47,14 @@ async checkErrorMessage() {
     await expect(this.errorMessage).toHaveText(`You have an invalid email value`);
 }
 
+async loginUsingEmail(user:User) {
+    await this.goto();
+    await this.enterEmail(user.email);
+    await this.loginButtonClick();
+    await this.emailCopHelper.extractLink(user.email, 'Email Confirmation - You’re One Click Away');
+    let link = await this.emailCopHelper.extractLink(user.email, 'Email Confirmation - You’re One Click Away');
+console.log(link)
+
+}
 
 };
