@@ -46,7 +46,7 @@ test('An error message is displayed after clicking the Continue with Email butto
 });
 
 // Логин через Email
-test.only('Login with Email', async ({ page }) => {
+test('Login with Email', async ({ page }) => {
 
   const loginPage = new LoginPage(page)
   const user = new User()
