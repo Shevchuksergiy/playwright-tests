@@ -47,12 +47,12 @@ export class EmailCopHelper {
     }
     
 
-    //Исвлечь нужную ссылку из письма
-    async extractLink(email: string, subject: string): Promise<string | null> {
+    // Извлечь нужную ссылку из письма
+    async extractLink(email: string, subject: string): Promise<string> {
         try {
             const emails = await this.readEmails(email, subject);
             if (!emails.length || !emails[0]?.mail?.text) {
-                return null;
+                throw new Error("Письмо не найдено или оно пустое");
             }
     
             const textEmail: string = emails[0].mail.text;
@@ -60,23 +60,20 @@ export class EmailCopHelper {
             const links = textEmail.match(regex);
     
             if (!links) {
-                console.log("Жодних посилань не знайдено в тексті листа.");
-                return null;
+                throw new Error("Ссылки в тексте письма не найдены");
             }
     
             const regex2 = /\[https:\/\/cdpjdfciwmhoefhqahgt\.supabase\.co\/auth\/v1\/[^\]]+\]/;
             const extractedLink = links.find(link => regex2.test(link));
     
             if (extractedLink) {
-                // Видаляємо квадратні дужки та повертаємо посилання
                 return extractedLink.replace(/\[|\]/g, '');
             } else {
-                console.log("Ссылка не найдена");
-                return null;
+                throw new Error("Соответствующая ссылка не найдена");
             }
         } catch (error) {
-            console.error("Помилка при вилученні посилання:", error);
-            return null;
+            console.error("Ошибка при извлечении ссылки:", error);
+            throw error; // Теперь выбрасывает ошибку вместо возврата null
         }
     }
 

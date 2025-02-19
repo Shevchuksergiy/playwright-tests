@@ -59,9 +59,10 @@ async loginUsingEmail(user:User) {
     await this.goto();
     await this.enterEmail(user.email);
     await this.loginButtonClick();
-    await this.emailCopHelper.extractLink(user.email, 'Email Confirmation - You’re One Click Away');
     let link = await this.emailCopHelper.extractLink(user.email, 'Email Confirmation - You’re One Click Away');
 console.log(link)
+await this.page.goto(link);
+await this.page.waitForURL(/.*\/onboarding.*/);
 
 }
 
